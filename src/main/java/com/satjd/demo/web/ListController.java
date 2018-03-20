@@ -1,6 +1,7 @@
 package com.satjd.demo.web;
 
 import com.satjd.demo.domain.MonthArrangement;
+import com.satjd.demo.domain.SurgeryArrangement;
 import com.satjd.demo.domain.WeekArrangement;
 import com.satjd.demo.domain.WeekdayDescriptor;
 import com.satjd.demo.dto.InsertIdResponse;
@@ -43,9 +44,9 @@ public class ListController {
     }
 
     @RequestMapping(value = "/month",method = RequestMethod.DELETE)
-    public String deleteMonthArrangement(@RequestParam int id) {
+    public void deleteMonthArrangement(@RequestParam int id) {
         // TODO delete arrangement by id
-        return "m";
+        return;
     }
 
     @RequestMapping(value = "/week",method = RequestMethod.GET)
@@ -78,11 +79,39 @@ public class ListController {
     }
 
     @RequestMapping(value = "/week",method = RequestMethod.DELETE)
-    public String deleteWeekArrangement(@RequestParam int id) {
+    public void deleteWeekArrangement(@RequestParam int id) {
         // TODO delete arrangement by id
-        return "m";
+        return;
     }
 
+    @RequestMapping(value = "/surgery",method = RequestMethod.GET)
+    public List<SurgeryArrangement> getSurgeryArrangement(@RequestParam int y, @RequestParam int m, @RequestParam int d) {
 
+        // TODO fetch data
+        List<SurgeryArrangement> li = new ArrayList<>();
+
+        li.add(new SurgeryArrangement());
+        li.get(0).setSurgeryId(101);
+        li.add(new SurgeryArrangement());
+        li.get(0).setSurgeryId(101);
+
+        return li;
+    }
+
+    @RequestMapping(value = "/surgery",method = RequestMethod.PUT)
+    public InsertIdResponse updateSurgeryArrangement(@RequestParam(required = false,defaultValue = "false") Boolean create, @RequestBody(required = false) MonthArrangement newArrangement) {
+        if(create) {
+            // TODO create new surgery
+            return null;
+        } else {
+            return null;
+        }
+    }
+
+    @RequestMapping(value="/surgery",method = RequestMethod.DELETE)
+    public void deleteSurgeryArrangement(@RequestParam int surgeryId) {
+        // TODO delete surgery by id
+        return;
+    }
 
 }
