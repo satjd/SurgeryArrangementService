@@ -23,3 +23,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### Sercret Props ###
+src/main/resources/application-dev.properties

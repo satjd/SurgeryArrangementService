@@ -1,12 +1,28 @@
 package com.satjd.demo.domain;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+
+@Entity
+@Table(name = "staff")
+@EntityListeners(AuditingEntityListener.class)
 public class Staff {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sid;
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private int age;
     private boolean pregnant;
     private boolean vacation;
+
+    @NotBlank
     private int exp;
 
     public Staff(int sid) {
