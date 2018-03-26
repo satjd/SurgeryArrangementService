@@ -1,13 +1,13 @@
 package com.satjd.demo.domain;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "staff")
-@EntityListeners(AuditingEntityListener.class)
 public class Staff {
 
     @Id
@@ -17,16 +17,34 @@ public class Staff {
     @NotBlank
     private String name;
 
-    @NotBlank
+    @NotNull
     private int age;
+
     private boolean pregnant;
+
     private boolean vacation;
 
-    @NotBlank
+    @NotNull
     private int exp;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "night")
+    private Set<MonthArrangement> monthNightStaffArrangement = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "nightStandby")
+    private Set<MonthArrangement> monthNightStandbyStaffArrangement = new HashSet<>();
+
+    public Staff() {}
 
     public Staff(int sid) {
         this.sid = sid;
+    }
+
+    public Staff(@NotBlank String name, @NotBlank int age, boolean pregnant, boolean vacation, @NotBlank int exp) {
+        this.name = name;
+        this.age = age;
+        this.pregnant = pregnant;
+        this.vacation = vacation;
+        this.exp = exp;
     }
 
     public int getSid() {

@@ -1,10 +1,8 @@
 package com.satjd.demo.web;
 
-import com.satjd.demo.domain.MonthArrangement;
-import com.satjd.demo.domain.SurgeryArrangement;
-import com.satjd.demo.domain.WeekArrangement;
-import com.satjd.demo.domain.WeekdayDescriptor;
+import com.satjd.demo.domain.*;
 import com.satjd.demo.dto.InsertIdResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,30 +13,33 @@ import java.util.List;
 @RequestMapping("/list")
 public class ListController {
 
+    @Autowired
+    private MonthArrangementRepository monthRepo;
+
     @RequestMapping(value = "/month",method = RequestMethod.GET)
     public List<MonthArrangement> getMonthArrangement(@RequestParam int y,@RequestParam int m) {
-        List<MonthArrangement> li = new ArrayList<>();
 
-
-        // TODO fetch data
-        li.add(new MonthArrangement());
-        li.get(0).setId(1);
-        li.add(new MonthArrangement());
-        li.get(1).setId(2);
-
-        return li;
+        return monthRepo.findAll();
     }
 
     @RequestMapping(value = "/month",method = RequestMethod.PUT)
     public InsertIdResponse updateMonthArrangement(@RequestParam Boolean create,@RequestBody(required = false) MonthArrangement newArrangement) {
         if(create) {
             // TODO create a new arrangement
-
-            InsertIdResponse res = new InsertIdResponse();
-            res.setNewId(10001);
-            return res;
+            if(newArrangement == null) {
+                MonthArrangement newArr = new MonthArrangement();
+                monthRepo.save(newArr);
+                InsertIdResponse res = new InsertIdResponse();
+                res.setNewId(newArr.getId());
+                return res;
+            }
+            return null;
         } else {
-            // TODO update to new arrangement from request body
+            MonthArrangement dst = monthRepo.getOne(newArrangement.getId());
+            dst.setDate(newArrangement.getDate());
+            dst.setNight(newArrangement.getNight());
+            dst.setNightStandby(newArrangement.getNightStandby());
+            monthRepo.save(dst);
             return null;
         }
     }
@@ -46,6 +47,7 @@ public class ListController {
     @RequestMapping(value = "/month",method = RequestMethod.DELETE)
     public void deleteMonthArrangement(@RequestParam int id) {
         // TODO delete arrangement by id
+        monthRepo.deleteById(id);
         return;
     }
 
