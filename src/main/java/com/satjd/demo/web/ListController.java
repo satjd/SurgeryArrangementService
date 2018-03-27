@@ -16,6 +16,9 @@ public class ListController {
     @Autowired
     private MonthArrangementRepository monthRepo;
 
+    @Autowired
+    private WeekArrangementRepository weekRepo;
+
     @RequestMapping(value = "/month",method = RequestMethod.GET)
     public List<MonthArrangement> getMonthArrangement(@RequestParam int y,@RequestParam int m) {
 
@@ -30,18 +33,17 @@ public class ListController {
                 MonthArrangement newArr = new MonthArrangement();
                 monthRepo.save(newArr);
                 InsertIdResponse res = new InsertIdResponse();
-                res.setNewId(newArr.getId());
+                res.setNewId(newArr.getMonthArrangementId());
                 return res;
             }
-            return null;
         } else {
-            MonthArrangement dst = monthRepo.getOne(newArrangement.getId());
+            MonthArrangement dst = monthRepo.getOne(newArrangement.getMonthArrangementId());
             dst.setDate(newArrangement.getDate());
             dst.setNight(newArrangement.getNight());
             dst.setNightStandby(newArrangement.getNightStandby());
             monthRepo.save(dst);
-            return null;
         }
+        return null;
     }
 
     @RequestMapping(value = "/month",method = RequestMethod.DELETE)
@@ -54,16 +56,7 @@ public class ListController {
     @RequestMapping(value = "/week",method = RequestMethod.GET)
     public List<WeekArrangement> getWeekArrangement(@RequestParam int y,@RequestParam int m,@RequestParam int d) {
         // TODO fetch data
-
-        List<WeekArrangement> li = new ArrayList<>();
-        li.add(new WeekArrangement());
-        li.get(0).setArrangements(new ArrayList<>());
-        for(int i=1;i<=7;i++) {
-            li.get(0).getArrangements().add(new WeekdayDescriptor());
-        }
-        li.get(0).setId(1);
-
-        return li;
+        return weekRepo.findAll();
     }
 
     @RequestMapping(value = "/week",method = RequestMethod.PUT)
@@ -83,6 +76,7 @@ public class ListController {
     @RequestMapping(value = "/week",method = RequestMethod.DELETE)
     public void deleteWeekArrangement(@RequestParam int id) {
         // TODO delete arrangement by id
+        weekRepo.deleteById(id);
         return;
     }
 

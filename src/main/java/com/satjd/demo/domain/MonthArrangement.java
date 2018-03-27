@@ -10,7 +10,7 @@ public class MonthArrangement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int monthArrangementId;
 
     private String date;
 
@@ -37,14 +37,14 @@ public class MonthArrangement {
             inverseJoinColumns = {@JoinColumn(name = "staff_id")})
     private Set<Staff> night = new HashSet<>();
 
-    @ElementCollection
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "month_night_standby_staffs",
             joinColumns = {@JoinColumn(name = "month_id")},
             inverseJoinColumns = {@JoinColumn(name = "staff_id")})
-    private Set<Staff> nightStandby;
+    private Set<Staff> nightStandby = new HashSet<>();
 
-    public int getId() {
-        return id;
+    public int getMonthArrangementId() {
+        return monthArrangementId;
     }
 
     public Set<Staff> getNight() {

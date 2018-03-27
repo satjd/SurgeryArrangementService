@@ -1,5 +1,6 @@
 package com.satjd.demo.web;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.satjd.demo.domain.Staff;
 import com.satjd.demo.domain.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class StaffController {
     StaffRepository staffRepository;
 
     @RequestMapping(value = "",method = RequestMethod.GET)
+    @JsonView(Staff.Views.Internal.class)
     public List<Staff> getStaffList() throws Exception {
 
         // TODO fetch staff data from db

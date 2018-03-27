@@ -1,5 +1,7 @@
 package com.satjd.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -33,6 +35,11 @@ public class Staff {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "nightStandby")
     private Set<MonthArrangement> monthNightStandbyStaffArrangement = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "staffThisWeekday")
+    private Set<WeekArrangement> weekArrangement = new HashSet<>();
+
     public Staff() {}
 
     public Staff(int sid) {
@@ -47,6 +54,8 @@ public class Staff {
         this.exp = exp;
     }
 
+
+    @JsonView(Staff.Views.Public.class)
     public int getSid() {
         return sid;
     }
@@ -55,6 +64,7 @@ public class Staff {
         this.sid = sid;
     }
 
+    @JsonView(Staff.Views.Public.class)
     public String getName() {
         return name;
     }
@@ -63,6 +73,7 @@ public class Staff {
         this.name = name;
     }
 
+    @JsonView(Staff.Views.Internal.class)
     public int getAge() {
         return age;
     }
@@ -71,6 +82,7 @@ public class Staff {
         this.age = age;
     }
 
+    @JsonView(Staff.Views.Internal.class)
     public boolean isPregnant() {
         return pregnant;
     }
@@ -79,6 +91,7 @@ public class Staff {
         this.pregnant = pregnant;
     }
 
+    @JsonView(Staff.Views.Internal.class)
     public boolean isVacation() {
         return vacation;
     }
@@ -87,11 +100,20 @@ public class Staff {
         this.vacation = vacation;
     }
 
+    @JsonView(Staff.Views.Internal.class)
     public int getExp() {
         return exp;
     }
 
     public void setExp(int exp) {
         this.exp = exp;
+    }
+
+    public static final class Views {
+        // show only public data
+        public interface Public {}
+
+        // show public and internal data
+        public interface Internal extends Public {}
     }
 }
