@@ -15,7 +15,7 @@ public class WeekArrangement {
     private int weekArrangementId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "sid",nullable = false)
+    @JoinColumn(name = "sid")
     @JsonView(Staff.Views.Public.class)
     private Staff staffThisWeekday;
 
@@ -35,11 +35,6 @@ public class WeekArrangement {
     public int getWeekArrangementId() {
         return weekArrangementId;
     }
-
-    public void setWeekArrangementId(int weekArrangementId) {
-        this.weekArrangementId = weekArrangementId;
-    }
-
 
     public Staff getStaffThisWeekday() {
         return staffThisWeekday;

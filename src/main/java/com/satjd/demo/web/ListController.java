@@ -19,6 +19,11 @@ public class ListController {
     @Autowired
     private WeekArrangementRepository weekRepo;
 
+    @Autowired
+    private  WeekdayDescriptorRepository weekDesRepo;
+
+    @Autowired StaffRepository staffRepo;
+
     @RequestMapping(value = "/month",method = RequestMethod.GET)
     public List<MonthArrangement> getMonthArrangement(@RequestParam int y,@RequestParam int m) {
 
@@ -60,15 +65,40 @@ public class ListController {
     }
 
     @RequestMapping(value = "/week",method = RequestMethod.PUT)
-    public InsertIdResponse updateWeekArrangement(@RequestParam Boolean create,@RequestBody(required = false)WeekArrangement newArrangement) {
+    public InsertIdResponse updateWeekArrangement(@RequestParam Boolean create,@RequestBody(required = false)WeekArrangement newArrangement) throws Exception {
         if(create) {
             // TODO create a new arrangement
+            WeekArrangement warr = new WeekArrangement();
+            warr.setStaffThisWeekday(staffRepo.getOne(1));
+            weekRepo.save(warr);
+
+            ArrayList<WeekdayDescriptor> arlwd = new ArrayList<>();
+            for(short i=1;i<=7;i++) {
+                WeekdayDescriptor wd = new WeekdayDescriptor();
+                wd.setIdle(true);
+                wd.setKey(new WeekdayDescriptorKey());
+                wd.getKey().setWeekDay(i);
+                wd.setArrangementOfDescriptor(warr);
+                arlwd.add(wd);
+            }
+            weekDesRepo.saveAll(arlwd);
+
+
+
 
             InsertIdResponse res = new InsertIdResponse();
-            res.setNewId(10001);
+            res.setNewId(warr.getWeekArrangementId());
             return res;
         } else {
             // TODO update to new arrangement from request body
+            WeekArrangement dst = weekRepo.getOne(newArrangement.getWeekArrangementId());
+            dst.setStaffThisWeekday(newArrangement.getStaffThisWeekday());
+            dst.setTodayDescriptors(newArrangement.getTodayDescriptors());
+
+            if(dst.getTodayDescriptors() == null || dst.getStaffThisWeekday() == null)
+                throw new Exception("Weekday Arrangements and Staff should not be null");
+            weekRepo.save(dst);
+
             return null;
         }
     }

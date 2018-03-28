@@ -1,5 +1,7 @@
 package com.satjd.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -7,11 +9,14 @@ import javax.validation.constraints.NotNull;
 @Table(name = "weekday_descriptor")
 public class WeekdayDescriptor {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int descriptorId;
+    @EmbeddedId
+    private WeekdayDescriptorKey key;
 
-    private short weekday;
+    @ManyToOne
+    @MapsId("weekArrangementId")
+    @JoinColumn(name = "week_arrangement_id")
+    @JsonIgnore
+    private WeekArrangement arrangementOfDescriptor;
 
     @NotNull
     private boolean idle;
@@ -20,12 +25,12 @@ public class WeekdayDescriptor {
 
     private short end;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "week_arrangement_id")
-    private WeekArrangement arrangementOfDescriptor;
+    public WeekdayDescriptorKey getKey() {
+        return key;
+    }
 
-    public void setArrangementOfDescriptor(WeekArrangement arrangementOfDescriptor) {
-        this.arrangementOfDescriptor = arrangementOfDescriptor;
+    public void setKey(WeekdayDescriptorKey key) {
+        this.key = key;
     }
 
     public boolean isIdle() {
@@ -52,11 +57,11 @@ public class WeekdayDescriptor {
         this.end = end;
     }
 
-    public short getWeekDay() {
-        return weekday;
+    public WeekArrangement getArrangementOfDescriptor() {
+        return arrangementOfDescriptor;
     }
 
-    public void setWeekDay(short weekDay) {
-        this.weekday = weekDay;
+    public void setArrangementOfDescriptor(WeekArrangement arrangementOfDescriptor) {
+        this.arrangementOfDescriptor = arrangementOfDescriptor;
     }
 }
